@@ -1,5 +1,4 @@
 from django.db import models, transaction
-from __future__ import unicode_literals
 
 from users.models import User
 
