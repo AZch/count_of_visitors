@@ -8,7 +8,6 @@ class Page(models.Model):
 
 
 class Connect(models.Model):
-    user_id = models.IntegerField()
     user = models.ForeignKey(
         User,
         on_delete=models.DO_NOTHING,

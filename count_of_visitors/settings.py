@@ -23,6 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '-o9br(+_&$t55u55=v7$vw@3%s#mz!ad)55do95d(3$39pbz!k'
+AUTH_USER_MODEL = "users.User"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -82,8 +83,12 @@ WSGI_APPLICATION = 'count_of_visitors.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django_mongodb_engine',
-        'NAME': db.name
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': db.name,
+        'USER': db.user,
+        'PASSWORD': db.password,
+        'HOST': db.host,
+        'PORT': db.port,
     }
 }
 
