@@ -7,10 +7,7 @@ from count_connect.Connections.ProcessPage import process_page_from_request
 from count_connect.serializers import *
 
 
-
-
-
-class MainPageAPIView(APIView):
+class SecondPageAPIView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request):

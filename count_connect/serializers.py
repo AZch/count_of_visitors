@@ -6,10 +6,10 @@ from count_connect.models import *
 class ConnectSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = Connect
-        field = ('id', 'ip_addr')
+        fields = ('id', 'ip_addr', 'page', 'user')
 
 
 class PageSerializer(serializers.ModelSerializer):
     class Met(object):
         model = Page
-        field = ('id', 'url_page')
+        fields = ('id', 'url_page')
