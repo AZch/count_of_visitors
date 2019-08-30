@@ -3,17 +3,16 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from count_connect.Connections.ProcessPage import process_page_from_request
+from count_connect.Connections.ProcessPage import pegination_connect_pages, get_current_connection
 from count_connect.serializers import *
-
-
-
 
 
 class MainPageAPIView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request):
-        result_data = process_page_from_request(request)
-
-        return Response(result_data, status.HTTP_200_OK)
+        data = {
+            'old_connections': ConnectSerializer(pegination_connect_pages(request), many=True).data,
+            'current_connect': get_current_connection(request)
+        }
+        return Response(data, status.HTTP_200_OK)
