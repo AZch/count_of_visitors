@@ -8,6 +8,7 @@ class Page(models.Model):
 
 
 class Connect(models.Model):
+    ip_addr = models.CharField(max_length=200)
     user = models.ForeignKey(
         User,
         on_delete=models.DO_NOTHING,
