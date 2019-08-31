@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from Connections.ProcessPage import pegination_connect_pages
+from count_connect.serializers import ConnectSerializer
 from users.models import User
 from users.serializers import UserSerializer
 
@@ -12,13 +13,13 @@ class UserAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, requests):
-        result_data = pegination_connect_pages(requests)
         result = {
-            'connections': result_data,
+            'connections': ConnectSerializer(pegination_connect_pages(requests), many=True).data,
             'user': UserSerializer(requests.user).data
         }
 
         return Response(result, status.HTTP_200_OK)
+
 
     def put(self, requests):
         serializer = UserSerializer(requests.user, data=requests.data.get('user', {}), partial=True)

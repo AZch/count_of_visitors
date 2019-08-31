@@ -15,4 +15,4 @@ class MainPageAPIView(APIView):
             'old_connections': ConnectSerializer(pegination_connect_pages(request), many=True).data,
             'current_connect': get_current_connection(request)
         }
-        return Response(data, status.HTTP_200_OK)
+        return Response(data, status=status.HTTP_200_OK)

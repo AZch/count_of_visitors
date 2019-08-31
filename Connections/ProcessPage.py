@@ -24,6 +24,7 @@ def process_page_from_request(request):
 
     return Connect.objects.filter(page=page)
 
+
 def get_current_connection(request):
     page = Page.objects.get_or_create(url_page=request.path)[0]
     user_ip = get_ip_user(request)
@@ -31,6 +32,7 @@ def get_current_connection(request):
     if not request.user.is_anonymous:
         data['user'] = request.user.id
     return data
+
 
 def pegination_connect_pages(request):
     if request.GET.get('page') is None:

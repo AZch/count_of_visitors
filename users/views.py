@@ -1,14 +1,24 @@
 import jwt
 from django.contrib.auth import user_logged_in
-from django.shortcuts import render
-from pymongo.response import Response
 from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.conf import settings
 from rest_framework_jwt.serializers import jwt_payload_handler
 
 from users.models import User
+from users.serializers import UserSerializer
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny,])
+def create_user(requests):
+    user = requests.data
+    serializer = UserSerializer(data=user)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['POST'])
@@ -31,7 +41,7 @@ def authenticate_user(requests):
                 user_logged_in.send(sender=user.__class__,
                                     requests=requests,
                                     user=user)
-                return Response(user_details, status.HTTP_200_OK)
+                return Response(user_details, status=status.HTTP_200_OK)
             except Exception as e:
                 res = {'error': 'problem with create jwt'}
                 return Response(res, status=status.HTTP_403_FORBIDDEN)
