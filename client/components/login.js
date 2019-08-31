@@ -1,5 +1,6 @@
 const React = require('react');
 const TextInput = require('../components/textInput');
+const StandartQuestions = require('../questions/standart');
 
 class loginInput extends React.Component {
     constructor(props) {
@@ -7,12 +8,34 @@ class loginInput extends React.Component {
 
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            status: ''
         }
     }
 
-    handleSubmit() {
-
+    handleSubmit(event) {
+        event.preventDefault();
+        const { email, password } = this.state;
+        if (email === '' || password === '') {
+            this.setState({
+               status: 'email or password cant be empty'
+            });
+        } else {
+            StandartQuestions.postData("/", { email: email, password: password })
+                .then((result) => {
+                    if (result.error === undefined) {
+                        this.setState({
+                            status: 'success login'
+                        });
+                        this.state.history.pushState('/user/');
+                    }
+                })
+                .catch((error) => {
+                    this.setState({
+                        status: 'cant login'
+                    });
+                });
+        }
     }
 
     updateEmailField = (value) => {
