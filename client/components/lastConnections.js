@@ -10,16 +10,20 @@ class lastConnections extends React.Component {
             page: 1,
             status: '',
         };
+
+        this.getPage = this.getPage.bind(this);
     }
 
-    seeNextPage(event) {
-        event.preventDefault();
-        const { page, listConn } = this.state;
-        const newPage = page + 1;
-        StandartQuestions.getData('?page=' + newPage)
+    getPage(newPage = -1) {
+        const { listConn } = this.state;
+        let page = '';
+        if (page > 0) {
+            page = '?page=' + newPage;
+        }
+        StandartQuestions.getData(page)
             .then((result) => {
                 if (result.error === undefined) {
-                    let newConn = lastConnections;
+                    let newConn = listConn;
                     newConn.push(result.connections);
                     this.setState({
                         listConn: newConn,
@@ -35,7 +39,18 @@ class lastConnections extends React.Component {
                     status: 'cant get page connections'
                 });
             });
+    }
 
+    seeNextPage(event) {
+        event.preventDefault();
+        const { page } = this.state;
+        const newPage = page + 1;
+        this.getPage(newPage)
+
+    }
+
+    componentDidMount() {
+        this.getPage();
     }
 
     render() {
