@@ -3,8 +3,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from count_connect.Connections.ProcessPage import process_page_from_request
-from count_connect.serializers import *
+from Connections.ProcessPage import process_page_from_request
 
 
 class SecondPageAPIView(APIView):

@@ -3,7 +3,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from count_connect.Connections.ProcessPage import pegination_connect_pages, get_current_connection
+from Connections.ProcessPage import pegination_connect_pages, get_current_connection
 from count_connect.serializers import *
 
 

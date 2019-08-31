@@ -1,10 +1,11 @@
 from django.conf.urls import url
 
 from users.APIView.UserAPIView import UserAPIView
+from .views import *
 
 app_name = 'users'
 
 urlpatterns = [
-    url(r'^update/', UserAPIView.as_view()),
-    url(r'^delete/', UserAPIView.as_view()),
+    url(r'^/$', UserAPIView.as_view()),
+    url(r'^login/', authenticate_user),
 ]
