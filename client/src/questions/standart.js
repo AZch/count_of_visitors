@@ -1,23 +1,25 @@
 
 const axios = require('axios');
 const API_URL = 'https://localhost:8000';
-const Token = require('../questions/token');
+const UserData = require('./userData');
 
 async function login(data = {}, isCreate) {
     let res = {};
     if (isCreate) {
-        res = await  axios.post(`${API_URL}/user/create`, data)
-    } else {
-        res = await axios.post(`${API_URL}/user/login`, data);
+        res = await  axios.post(`${API_URL}/user/create`, data);
+        data = res.data;
     }
-    Token.setToken(res.data.token);
+    res = await axios.post(`${API_URL}/user/login`, data);
+    console.log(res.data);
+    UserData.setUserData(res.data);
+    console.log(UserData.getUserData());
     return res.data;
 }
 
 async function getConnections(url = "", numPage) {
     let config = {};
-    if (Token.isExist()) {
-        config = {headers: {'Authorization': `Bearer ${Token.getToken()}`} }
+    if (UserData.isExist()) {
+        config = {headers: {'Authorization': `Bearer ${UserData.getToken()}`} }
     }
     const result = await axios.get(`${API_URL}${url}/?page=${numPage}`, config);
     return result.data;

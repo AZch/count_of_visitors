@@ -7,15 +7,15 @@ import Logout from "./components/logout";
 const Router = require('react-router-dom').BrowserRouter;
 const Link = require('react-router-dom').Link;
 const Route = require('react-router-dom').Route;
-const Token = require('./questions/token');
+const UserData = require('./questions/userData');
 
 class App extends React.Component {
   constructor(props) {
     super(props);
+    console.log(UserData.getUserData());
     this.state = {
-      userData: {}
+        userData: UserData.getUserData()
     };
-    Token.deltetToken();
   }
 
   userUpdate = (userData) => {
@@ -33,7 +33,7 @@ class App extends React.Component {
   render() {
     const { userData } = this.state;
     let userPresent = "", loginButton, loginText, editOrSignUp, editOrSignUpText;
-    if (userData !== undefined && userData !== null && userData.login !== undefined && userData.email !== undefined) {
+    if (UserData.isExist()) {
       userPresent = "User login: " + userData.login + " email: " + userData.email;
       loginButton = <Logout userUpdate={this.userUpdate}/>;
       loginText = "Logout";

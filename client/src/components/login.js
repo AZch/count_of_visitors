@@ -13,7 +13,8 @@ class LoginInput extends React.Component {
             login: '',
             status: '',
             userUpdate: props.userUpdate,
-            isCreate: props.isCreate === undefined ? false : props.isCreate
+            isCreate: props.isCreate === undefined ? false : props.isCreate,
+            isEdit: props.isEdit === undefined ? false : props.isEdit
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -58,7 +59,7 @@ class LoginInput extends React.Component {
     };
 
     render() {
-        const { status, isCreate } = this.state;
+        const { status, isCreate, isEdit } = this.state;
         let urlLastConnections = "", loginUserComponent = <div/>;
         if (isCreate) {
             urlLastConnections = "/user/create";
@@ -66,7 +67,7 @@ class LoginInput extends React.Component {
                                     Login: <TextInput typeInput="text"
                                       updateData={this.updateLoginField}/>
                                  </div>
-        } else {
+        } else if (isEdit) {
             urlLastConnections = "/user/login";
         }
         return (

@@ -1,5 +1,5 @@
 import LastConnections from "./lastConnections";
-const Token = require('../questions/token');
+const UserData = require('../questions/userData');
 const React = require('react');
 
 class Logout extends React.Component {
@@ -12,7 +12,7 @@ class Logout extends React.Component {
   }
     logout(event) {
       event.preventDefault();
-      Token.deltetToken();
+      UserData.deleteUser();
       this.state.userUpdate({});
     }
 
