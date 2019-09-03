@@ -1,8 +1,33 @@
 const React = require('react');
-const TextInput = require('../components/textInput');
 const StandartQuestions = require('../questions/standart');
 
-class loginInput extends React.Component {
+class TextInput extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: '',
+            updateData: props.updateData
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(event) {
+        this.setState({ value: event.target.value });
+        this.state.updateData(event.target.value);
+    }
+
+    render() {
+        return (
+            <input
+                type="text"
+                value={this.state.value}
+                onChange={this.handleChange} />
+        )
+    }
+}
+
+class LoginInput extends React.Component {
     constructor(props) {
         super(props);
 
@@ -10,7 +35,9 @@ class loginInput extends React.Component {
             email: '',
             password: '',
             status: ''
-        }
+        };
+
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleSubmit(event) {
@@ -21,16 +48,17 @@ class loginInput extends React.Component {
                status: 'email or password cant be empty'
             });
         } else {
-            StandartQuestions.postData("/", { email: email, password: password })
+            console.log('go post');
+            StandartQuestions.postData("", { email: email, password: password })
                 .then((result) => {
                     if (result.error === undefined) {
                         this.setState({
                             status: 'success login'
                         });
-                        this.state.history.pushState('/user/');
+                        this.state.history.push('/user/');
                     }
                 })
-                .catch((error) => {
+                .catch(() => {
                     this.setState({
                         status: 'cant login'
                     });
@@ -49,6 +77,7 @@ class loginInput extends React.Component {
     render() {
         return (
             <form onSubmit={this.handleSubmit}>
+                some
                 <div className="board-row">
                     Login on this site
                 </div>
@@ -63,3 +92,5 @@ class loginInput extends React.Component {
         )
     }
 }
+
+export default LoginInput;

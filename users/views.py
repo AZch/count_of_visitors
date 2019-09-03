@@ -1,3 +1,5 @@
+import json
+
 import jwt
 from django.contrib.auth import user_logged_in
 from rest_framework import status
@@ -25,8 +27,10 @@ def create_user(requests):
 @permission_classes([AllowAny,])
 def authenticate_user(requests):
     try:
-        email = requests.data['email']
-        password = requests.data['password']
+        test = requests.body.decode('utf-8')
+        data = json.loads(requests.body.decode('utf-8'))
+        email = data['email']
+        password = data['password']
 
         user = User.objects.get(email=email, password=password)
         if user:
@@ -41,13 +45,15 @@ def authenticate_user(requests):
                 user_logged_in.send(sender=user.__class__,
                                     requests=requests,
                                     user=user)
-                return Response(user_details, status=status.HTTP_200_OK)
+                response = Response(user_details, status=status.HTTP_200_OK)
+                return response
             except Exception as e:
                 res = {'error': 'problem with create jwt'}
                 return Response(res, status=status.HTTP_403_FORBIDDEN)
         else:
             res = {'error': 'can not authenticate with the given credentials or the account has been deactivated'}
             return Response(res, status=status.HTTP_403_FORBIDDEN)
-    except:
+    except Exception as e:
+        print(e)
         res = {'error': 'please provide a email or password'}
         return Response(res, status=status.HTTP_403_FORBIDDEN)

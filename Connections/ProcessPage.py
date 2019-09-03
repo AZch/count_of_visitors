@@ -34,15 +34,21 @@ def get_current_connection(request):
     return data
 
 
+def strToInt(str):
+    try:
+        return int(str)
+    except:
+        return None
+
 def pegination_connect_pages(request):
-    if request.GET.get('page') is None:
+    page = strToInt(request.GET.get('page'))
+    if page is None or page <= 0:
         connect_page_list = process_page_from_request(request)
     else:
         page = Page.objects.get_or_create(url_page=request.path)[0]
         connect_page_list = Connect.objects.filter(page=page)
 
-    paginator = Paginator(connect_page_list, 2)
-    page = request.GET.get('page')
+    paginator = Paginator(connect_page_list, 10)
     try:
         connect_page = paginator.page(page)
     except PageNotAnInteger:
