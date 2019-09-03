@@ -16,7 +16,17 @@ from users.serializers import UserSerializer
 @api_view(['POST'])
 @permission_classes([AllowAny,])
 def create_user(requests):
-    user = requests.data
+    data = json.loads(requests.body.decode('utf-8'))
+    email = data['email']
+    password = data['password']
+    login = data['login']
+    user = {
+        "user": {
+            "email": email,
+            "password": password,
+            "login": login
+        }
+    }
     serializer = UserSerializer(data=user)
     serializer.is_valid(raise_exception=True)
     serializer.save()

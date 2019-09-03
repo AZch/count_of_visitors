@@ -1,8 +1,8 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Login from './components/login';
 import MainPage from "./components/MainPage";
+import Logout from "./components/logout";
 
 const Router = require('react-router-dom').BrowserRouter;
 const Link = require('react-router-dom').Link;
@@ -16,8 +16,6 @@ class App extends React.Component {
       userData: {}
     };
     Token.deltetToken();
-
-    this.logout = this.logout.bind(this);
   }
 
   userUpdate = (userData) => {
@@ -26,24 +24,25 @@ class App extends React.Component {
     });
   };
 
-  logout(event) {
-    event.preventDefault();
-    Token.deltetToken();
+  userCreate = (userData) => {
     this.setState({
-      userData: {}
-    })
-  }
+      userData: userData
+    });
+  };
 
   render() {
     const { userData } = this.state;
-    let userPresent = "", loginButton, loginText;
+    let userPresent = "", loginButton, loginText, editOrSignUp, editOrSignUpText;
     if (userData !== undefined && userData !== null && userData.login !== undefined && userData.email !== undefined) {
       userPresent = "User login: " + userData.login + " email: " + userData.email;
-      loginButton = <button onClick={this.logout}>Logout</button>;
+      loginButton = <Logout userUpdate={this.userUpdate}/>;
+      editOrSignUp = <Login isCreate={true} userUpdate={this.userCreate}/>;
       loginText = "Logout";
+      editOrSignUpText = "Edit account";
     } else {
       loginButton = <Login userUpdate={this.userUpdate}/>;
-      loginText = "Login";
+      loginText = "Sign in";
+      editOrSignUpText = "Sign up";
     }
     return (
       <Router>
@@ -58,6 +57,9 @@ class App extends React.Component {
                       </li>
                       <li>
                           <Link to="/login">{loginText}</Link>
+                      </li>
+                      <li>
+                          <Link to="/account">{editOrSignUpText}</Link>
                       </li>
                   </ul>
               </nav>

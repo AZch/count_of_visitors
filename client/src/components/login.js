@@ -1,33 +1,8 @@
 import LastConnections from "./lastConnections";
+import TextInput from "./textInput";
 
 const React = require('react');
 const StandartQuestions = require('../questions/standart');
-
-class TextInput extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: '',
-            updateData: props.updateData
-        };
-
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(event) {
-        this.setState({ value: event.target.value });
-        this.state.updateData(event.target.value);
-    }
-
-    render() {
-        return (
-            <input
-                type="text"
-                value={this.state.value}
-                onChange={this.handleChange} />
-        )
-    }
-}
 
 class LoginInput extends React.Component {
     constructor(props) {
@@ -36,7 +11,8 @@ class LoginInput extends React.Component {
             email: '',
             password: '',
             status: '',
-            userUpdate: props.userUpdate
+            userUpdate: props.userUpdate,
+            isCreate: props.isCreate === undefined ? false : props.isCreate
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -44,13 +20,13 @@ class LoginInput extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        const { email, password } = this.state;
+        const { email, password, isCreate } = this.state;
         if (email === '' || password === '') {
             this.setState({
                status: 'email or password cant be empty'
             });
         } else {
-            StandartQuestions.login({ email: email, password: password })
+            StandartQuestions.login({ email: email, password: password }, isCreate)
                 .then((result) => {
                     if (result.error === undefined) {
                         this.state.userUpdate(result);
@@ -77,23 +53,31 @@ class LoginInput extends React.Component {
     };
 
     render() {
-        const { status } = this.state;
+        const { status, isCreate } = this.state;
+        let urlLastConnections = "";
+        if (isCreate) {
+            urlLastConnections = "/user/create";
+        } else {
+            urlLastConnections = "/user/login";
+        }
         return (
             <form onSubmit={this.handleSubmit}>
                 <div className="board-row">
                     Login on this site
                 </div>
                 <div className="board-row" >
-                    email: <TextInput updateData={this.updateEmailField}/>
+                    email: <TextInput typeInput="text"
+                                      updateData={this.updateEmailField}/>
                 </div>
                 <div className="board-row" >
-                    Password: <TextInput updateData={this.updatePasswordField}/>
+                    Password: <TextInput typeInput="password"
+                                         updateData={this.updatePasswordField}/>
                 </div>
-                <input type="submit" value="Login" />
+                <input type="submit" value="Submit" />
                 <div className="board-row">
                     Status login: {status}
                 </div>
-                <LastConnections url="/user" />
+                <LastConnections url={urlLastConnections} />
             </form>
         )
     }
