@@ -11,9 +11,11 @@ async function login(data = {}) {
 }
 
 async function getConnections(url = "", numPage) {
-    console.log(Token.getToken());
-    let result = await axios.get(`${API_URL}${url}/?page=${numPage}`, {headers: {'Authorization': `Bearer ${Token.getToken()}`} });
-    console.log(result);
+    let config = {};
+    if (Token.isExist()) {
+        config = {headers: {'Authorization': `Bearer ${Token.getToken()}`} }
+    }
+    const result = await axios.get(`${API_URL}${url}/?page=${numPage}`, config);
     return result.data;
 }
 

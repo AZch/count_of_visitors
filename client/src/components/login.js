@@ -35,7 +35,8 @@ class LoginInput extends React.Component {
         this.state = {
             email: '',
             password: '',
-            status: ''
+            status: '',
+            userUpdate: props.userUpdate
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -52,6 +53,7 @@ class LoginInput extends React.Component {
             StandartQuestions.login({ email: email, password: password })
                 .then((result) => {
                     if (result.error === undefined) {
+                        this.state.userUpdate(result);
                         this.setState({
                             status: 'success login'
                         });
