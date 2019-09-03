@@ -36,11 +36,11 @@ class App extends React.Component {
     if (userData !== undefined && userData !== null && userData.login !== undefined && userData.email !== undefined) {
       userPresent = "User login: " + userData.login + " email: " + userData.email;
       loginButton = <Logout userUpdate={this.userUpdate}/>;
-      editOrSignUp = <Login isCreate={true} userUpdate={this.userCreate}/>;
       loginText = "Logout";
       editOrSignUpText = "Edit account";
     } else {
       loginButton = <Login userUpdate={this.userUpdate}/>;
+      editOrSignUp = <Login isCreate={true} userUpdate={this.userCreate}/>;
       loginText = "Sign in";
       editOrSignUpText = "Sign up";
     }
@@ -66,6 +66,7 @@ class App extends React.Component {
 
               <Route path="/" exact component={MainPage}/>
               <Route path="/login" render={() => loginButton}/>
+              <Route path="/account" render={() => editOrSignUp}/>
           </div>
       </Router>
   );

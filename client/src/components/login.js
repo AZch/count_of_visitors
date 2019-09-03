@@ -10,6 +10,7 @@ class LoginInput extends React.Component {
         this.state = {
             email: '',
             password: '',
+            login: '',
             status: '',
             userUpdate: props.userUpdate,
             isCreate: props.isCreate === undefined ? false : props.isCreate
@@ -20,24 +21,24 @@ class LoginInput extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        const { email, password, isCreate } = this.state;
-        if (email === '' || password === '') {
+        const { email, password, isCreate, login } = this.state;
+        if (email === '' || password === '' || (isCreate && login === '')) {
             this.setState({
-               status: 'email or password cant be empty'
+               status: 'all field cant be empty'
             });
         } else {
-            StandartQuestions.login({ email: email, password: password }, isCreate)
+            StandartQuestions.login({ email: email, login: login, password: password,  }, isCreate)
                 .then((result) => {
                     if (result.error === undefined) {
                         this.state.userUpdate(result);
                         this.setState({
-                            status: 'success login'
+                            status: 'success'
                         });
                     }
                 })
                 .catch((error) => {
                     this.setState({
-                        status: 'cant login'
+                        status: 'cant perform action'
                     });
                     console.log(error);
                 });
@@ -52,19 +53,25 @@ class LoginInput extends React.Component {
         this.setState({ password: value });
     };
 
+    updateLoginField = (value) => {
+        this.setState({ login: value });
+    };
+
     render() {
         const { status, isCreate } = this.state;
-        let urlLastConnections = "";
+        let urlLastConnections = "", loginUserComponent = <div/>;
         if (isCreate) {
             urlLastConnections = "/user/create";
+            loginUserComponent = <div className="board-row">
+                                    Login: <TextInput typeInput="text"
+                                      updateData={this.updateLoginField}/>
+                                 </div>
         } else {
             urlLastConnections = "/user/login";
         }
         return (
             <form onSubmit={this.handleSubmit}>
-                <div className="board-row">
-                    Login on this site
-                </div>
+                {loginUserComponent}
                 <div className="board-row" >
                     email: <TextInput typeInput="text"
                                       updateData={this.updateEmailField}/>

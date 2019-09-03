@@ -1,0 +1,29 @@
+from rest_framework import status
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from Connections.ProcessPage import pegination_connect_pages, get_current_connection
+from count_connect.serializers import ConnectSerializer
+from users.models import User
+from users.serializers import UserSerializer
+import json
+
+
+class CreateUserAPIView(APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, requests):
+        data = json.loads(requests.body.decode('utf-8'))
+        serializer = UserSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def get(self, requests):
+        result = {
+            'old_connections': ConnectSerializer(pegination_connect_pages(requests), many=True).data,
+            'current_connect': get_current_connection(requests)
+        }
+
+        return Response(result, status.HTTP_200_OK)

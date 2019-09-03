@@ -18,9 +18,10 @@ class TextInput extends React.Component {
     }
 
     render() {
+        const { type } = this.state;
         return (
             <input
-                type="text"
+                type={type}
                 value={this.state.value}
                 onChange={this.handleChange} />
         )
