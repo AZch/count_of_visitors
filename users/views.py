@@ -27,7 +27,6 @@ def create_user(requests):
 @permission_classes([AllowAny,])
 def authenticate_user(requests):
     try:
-        test = requests.body.decode('utf-8')
         data = json.loads(requests.body.decode('utf-8'))
         email = data['email']
         password = data['password']

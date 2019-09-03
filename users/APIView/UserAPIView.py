@@ -14,8 +14,8 @@ class UserAPIView(APIView):
 
     def get(self, requests):
         result = {
-            'connections': ConnectSerializer(pegination_connect_pages(requests), many=True).data,
-            'user': UserSerializer(requests.user).data
+            'old_connections': ConnectSerializer(pegination_connect_pages(requests), many=True).data,
+            'current_connect': UserSerializer(requests.user).data
         }
 
         return Response(result, status.HTTP_200_OK)

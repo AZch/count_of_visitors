@@ -20,19 +20,20 @@ class LastConnections extends React.Component {
         super(props);
         this.state = {
             listConn: [],
-            page: 1,
+            page: 0,
             status: "",
-            currentConn: {}
+            currentConn: {},
+            url: props.url
         };
 
         this.getPage = this.getPage.bind(this);
         this.seeNextPage = this.seeNextPage.bind(this);
     }
 
-    getPage(newPage = 0) {
-        console.log(newPage);
-        const { listConn } = this.state;
-        StandartQuestions.getData(newPage)
+    getPage(isFirst = false) {
+        const { listConn, url, page } = this.state;
+        const newPage = isFirst ? page : page + 1;
+        StandartQuestions.getConnections(url, newPage)
             .then((result) => {
                 if (result.error === undefined) {
                     let newConn = listConn.concat(result.old_connections);
@@ -42,37 +43,36 @@ class LastConnections extends React.Component {
                         status: "success load page",
                         currentConn: result.current_connect
                     });
-                    console.log('suc');
                 } else {
                     this.setState({
                        status: 'cant load page connections'
                     });
                 }
-                    console.log('su1c');
             }).catch((error) => {
                 this.setState({
                     status: 'cant get page connections'
                 });
-                    console.log(error);
+                console.log(error);
             });
     }
 
     seeNextPage(event) {
         event.preventDefault();
-        const { page } = this.state;
-        const newPage = page + 1;
-        this.getPage(newPage)
+        this.getPage()
 
     }
 
     componentDidMount() {
-        this.getPage();
+        this.getPage(true);
     }
 
     render() {
-        const { listConn } = this.state;
+        const { listConn, currentConn, status } = this.state;
         return (
             <div>
+                <Connection
+                    item={currentConn}
+                    index="current"/>
                 {
                     listConn.map((item, index) => {
                         return (
@@ -85,6 +85,9 @@ class LastConnections extends React.Component {
                     })
                 }
                 <button onClick={this.seeNextPage} > next page </button>
+                <div>
+                    status: {status}
+                </div>
             </div>
         );
     }

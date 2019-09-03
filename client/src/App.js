@@ -8,8 +8,13 @@ const Router = require('react-router-dom').BrowserRouter;
 const Link = require('react-router-dom').Link;
 const Route = require('react-router-dom').Route;
 
-function App() {
-  return (
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
       <Router>
           <div>
               <nav>
@@ -24,10 +29,13 @@ function App() {
               </nav>
 
               <Route path="/" exact component={MainPage}/>
-              <Route path="/login" component={Login}/>
+              <Route path="/login" render={()=><Login value="123123"/>}/>
           </div>
       </Router>
   );
+  }
+
+
 }
 
 export default App;

@@ -26,7 +26,6 @@ def process_page_from_request(request):
 
 
 def get_current_connection(request):
-    page = Page.objects.get_or_create(url_page=request.path)[0]
     user_ip = get_ip_user(request)
     data = {'ip_addr': user_ip, 'user': None}
     if not request.user.is_anonymous:
@@ -45,14 +44,14 @@ def pegination_connect_pages(request):
     if page is None or page <= 0:
         connect_page_list = process_page_from_request(request)
     else:
-        page = Page.objects.get_or_create(url_page=request.path)[0]
-        connect_page_list = Connect.objects.filter(page=page)
+        pageWeb = Page.objects.get_or_create(url_page=request.path)[0]
+        connect_page_list = Connect.objects.filter(page=pageWeb)
 
     paginator = Paginator(connect_page_list, 10)
     try:
         connect_page = paginator.page(page)
     except PageNotAnInteger:
-        connect_page = paginator.page(1)
+        connect_page = []
     except EmptyPage:
-        connect_page = paginator.page(paginator.num_pages)
+        connect_page = []
     return connect_page

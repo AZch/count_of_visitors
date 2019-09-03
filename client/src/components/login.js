@@ -1,3 +1,5 @@
+import LastConnections from "./lastConnections";
+
 const React = require('react');
 const StandartQuestions = require('../questions/standart');
 
@@ -30,7 +32,6 @@ class TextInput extends React.Component {
 class LoginInput extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             email: '',
             password: '',
@@ -48,20 +49,19 @@ class LoginInput extends React.Component {
                status: 'email or password cant be empty'
             });
         } else {
-            console.log('go post');
-            StandartQuestions.postData("", { email: email, password: password })
+            StandartQuestions.login({ email: email, password: password })
                 .then((result) => {
                     if (result.error === undefined) {
                         this.setState({
                             status: 'success login'
                         });
-                        this.state.history.push('/user/');
                     }
                 })
-                .catch(() => {
+                .catch((error) => {
                     this.setState({
                         status: 'cant login'
                     });
+                    console.log(error);
                 });
         }
     }
@@ -75,9 +75,9 @@ class LoginInput extends React.Component {
     };
 
     render() {
+        const { status } = this.state;
         return (
             <form onSubmit={this.handleSubmit}>
-                some
                 <div className="board-row">
                     Login on this site
                 </div>
@@ -88,6 +88,10 @@ class LoginInput extends React.Component {
                     Password: <TextInput updateData={this.updatePasswordField}/>
                 </div>
                 <input type="submit" value="Login" />
+                <div className="board-row">
+                    Status login: {status}
+                </div>
+                <LastConnections url="/user" />
             </form>
         )
     }
