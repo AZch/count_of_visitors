@@ -17,7 +17,6 @@ class EditUser extends React.Component {
             status: '',
             userUpdate: props.userUpdate,
         };
-        console.log(this.state);
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }

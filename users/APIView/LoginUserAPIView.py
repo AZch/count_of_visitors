@@ -19,7 +19,6 @@ class LoginUserAPIView(APIView):
 
     def post(self, requests):
         try:
-            print('ets')
             data = json.loads(requests.body.decode('utf-8'))
             email = data['email']
             password = data['password']

@@ -14,9 +14,7 @@ class CreateUserAPIView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, requests):
-        print('1')
         data = json.loads(requests.body.decode('utf-8'))
-        print(data)
         try:
             serializer = UserSerializer(data=data)
             serializer.is_valid(raise_exception=True)

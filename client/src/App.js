@@ -13,7 +13,6 @@ const UserData = require('./questions/userData');
 class App extends React.Component {
   constructor(props) {
     super(props);
-    console.log(UserData.getUserData());
     this.state = {
         userData: UserData.getUserData()
     };

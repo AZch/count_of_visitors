@@ -15,7 +15,6 @@ class UserAPIView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, requests):
-        print('1')
         result = {
             'old_connections': pegination_connect_pages(requests),
             'current_connect': get_current_connection(requests)
@@ -25,18 +24,13 @@ class UserAPIView(APIView):
 
 
     def put(self, requests):
-        print("1")
         data = json.loads(requests.body.decode('utf-8'))
-        print(data)
         user = User.objects.get(email=data['email'], password=data['oldPassword'])
-        print("1")
         if user:
-            print("1")
             data['password'] = data['newPassword']
             serializer = UserSerializer(user, data=data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            print('sec')
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'cant find user'}, status=status.HTTP_403_FORBIDDEN)
