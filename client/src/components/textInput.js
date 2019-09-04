@@ -4,7 +4,7 @@ class TextInput extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: '',
+            value: props.value === undefined ? '' : props.value,
             updateData: props.updateData,
             type: props.typeInput
         };

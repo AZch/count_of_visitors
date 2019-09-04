@@ -1,33 +1,38 @@
 import LastConnections from "./lastConnections";
 import TextInput from "./textInput";
+import UserData from "../questions/userData";
 
 const React = require('react');
 const StandartQuestions = require('../questions/standart');
 
-class LoginInput extends React.Component {
+class EditUser extends React.Component {
     constructor(props) {
         super(props);
+        const userData = UserData.getUserData();
         this.state = {
-            email: '',
-            password: '',
-            login: '',
+            email: userData.email,
+            newPassword: '',
+            oldPassword: '',
+            login: userData.login,
             status: '',
             userUpdate: props.userUpdate,
-            isCreate: props.isCreate === undefined ? false : props.isCreate,
         };
+        console.log(this.state);
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        const { email, password, isCreate, login } = this.state;
-        if (email === '' || password === '' || (isCreate && login === '')) {
+        const { email, password, oldPassword, login, newPassword } = this.state;
+        if (email === '' || password === '' || login === '' ||
+            oldPassword === '') {
             this.setState({
-               status: 'all field cant be empty'
+               status: 'field cant be empty'
             });
         } else {
-            StandartQuestions.login({ email: email, login: login, password: password,  }, isCreate)
+            const resNewPassword = newPassword === '' ? oldPassword : newPassword;
+            StandartQuestions.editUser({ email: email, login: login, oldPassword: oldPassword, newPassword: resNewPassword })
                 .then((result) => {
                     if (result.error === undefined) {
                         this.state.userUpdate(result);
@@ -49,8 +54,12 @@ class LoginInput extends React.Component {
         this.setState({ email: value });
     };
 
-    updatePasswordField = (value) => {
-        this.setState({ password: value });
+    updateOldPasswordField = (value) => {
+        this.setState({ oldPassword: value });
+    };
+
+    updateNewPasswordField = (value) => {
+        this.setState({ newPassword: value });
     };
 
     updateLoginField = (value) => {
@@ -58,36 +67,35 @@ class LoginInput extends React.Component {
     };
 
     render() {
-        const { status, isCreate } = this.state;
-        let urlLastConnections = "", loginUserComponent = <div/>;
-        if (isCreate) {
-            urlLastConnections = "/user/create";
-            loginUserComponent = <div className="board-row">
-                                    Login: <TextInput typeInput="text"
-                                      updateData={this.updateLoginField}/>
-                                 </div>
-        } else {
-            urlLastConnections = "/user/login";
-        }
+        const { status, email, login } = this.state;
         return (
             <form onSubmit={this.handleSubmit}>
-                {loginUserComponent}
+                <div className="board-row" >
+                    login: <TextInput typeInput="text"
+                                      value={login}
+                                      updateData={this.updateLoginField}/>
+                </div>
                 <div className="board-row" >
                     email: <TextInput typeInput="text"
+                                      value={email}
                                       updateData={this.updateEmailField}/>
                 </div>
                 <div className="board-row" >
-                    Password: <TextInput typeInput="password"
-                                         updateData={this.updatePasswordField}/>
+                    Old password: <TextInput typeInput="password"
+                                         updateData={this.updateOldPasswordField}/>
+                </div>
+                <div className="board-row" >
+                    New password: <TextInput typeInput="password"
+                                         updateData={this.updateNewPasswordField}/>
                 </div>
                 <input type="submit" value="Submit" />
                 <div className="board-row">
                     Status login: {status}
                 </div>
-                <LastConnections url={urlLastConnections} />
+                <LastConnections url="/user" />
             </form>
         )
     }
 }
 
-export default LoginInput;
+export default EditUser;

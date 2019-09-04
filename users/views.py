@@ -10,14 +10,11 @@ from django.conf import settings
 from rest_framework_jwt.serializers import jwt_payload_handler
 
 from users.models import User
-from users.serializers import UserSerializer
-
-
-
 @api_view(['POST'])
 @permission_classes([AllowAny,])
 def authenticate_user(requests):
     try:
+        print('ets')
         data = json.loads(requests.body.decode('utf-8'))
         email = data['email']
         password = data['password']

@@ -1,5 +1,7 @@
+import json
+
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -10,7 +12,7 @@ from users.serializers import UserSerializer
 
 
 class UserAPIView(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
 
     def get(self, requests):
         result = {
@@ -22,10 +24,21 @@ class UserAPIView(APIView):
 
 
     def put(self, requests):
-        serializer = UserSerializer(requests.user, data=requests.data.get('user', {}), partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        print("1")
+        data = json.loads(requests.body.decode('utf-8'))
+        print(data)
+        user = User.objects.get(email=data['email'], password=data['oldPassword'])
+        print("1")
+        if user:
+            print("1")
+            data['password'] = data['newPassword']
+            serializer = UserSerializer(user, data=data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            print('sec')
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'cant find user'}, status=status.HTTP_403_FORBIDDEN)
 
     def delete(self, requests):
         try:

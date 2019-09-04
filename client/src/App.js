@@ -3,6 +3,7 @@ import './App.css';
 import Login from './components/login';
 import MainPage from "./components/MainPage";
 import Logout from "./components/logout";
+import EditUser from "./components/editUser";
 
 const Router = require('react-router-dom').BrowserRouter;
 const Link = require('react-router-dom').Link;
@@ -36,6 +37,7 @@ class App extends React.Component {
     if (UserData.isExist()) {
       userPresent = "User login: " + userData.login + " email: " + userData.email;
       loginButton = <Logout userUpdate={this.userUpdate}/>;
+      editOrSignUp = <EditUser userUpdate={this.userCreate}/>;
       loginText = "Logout";
       editOrSignUpText = "Edit account";
     } else {
