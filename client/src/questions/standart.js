@@ -24,7 +24,7 @@ async function editUser(data = {}) {
     return await login(res.data);
 }
 
-async function getConnections(url = "", numPage) {
+async function getConnections(url = "", numPage=0) {
     let config = {};
     if (UserData.isExist()) {
         config = {headers: {'Authorization': `Bearer ${UserData.getToken()}`} }

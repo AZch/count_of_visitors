@@ -1,6 +1,10 @@
+from Process.Convertors import strToInt
 from count_connect.models import Page, Connect
 from count_connect.serializers import ConnectSerializer
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
+from users.models import User
+from users.serializers import UserSerializer
 
 
 def get_ip_user(request):
@@ -12,6 +16,14 @@ def get_ip_user(request):
     return ip
 
 
+def fill_user_json_conn(connections):
+    connections_json = ConnectSerializer(connections, many=True).data
+    for connect in connections_json:
+        if connect['user'] is not None:
+            user = User.objects.get(id=connect['user'])
+            connect['user'] = UserSerializer(user).data['login']
+    return connections_json
+
 def process_page_from_request(request):
     page = Page.objects.get_or_create(url_page=request.path)[0]
     user_ip = get_ip_user(request)
@@ -22,30 +34,28 @@ def process_page_from_request(request):
     serializer.is_valid(raise_exception=True)
     serializer.save()
 
-    return Connect.objects.filter(page=page)
+    return get_conn_for_page(page)
+
+
+def get_conn_for_page(page):
+    return Connect.objects.filter(page=page).reverse()
 
 
 def get_current_connection(request):
     user_ip = get_ip_user(request)
     data = {'ip_addr': user_ip, 'user': None}
     if not request.user.is_anonymous:
-        data['user'] = request.user.id
+        data['user'] = request.user.login
     return data
 
 
-def strToInt(str):
-    try:
-        return int(str)
-    except:
-        return None
-
 def pegination_connect_pages(request):
     page = strToInt(request.GET.get('page'))
-    if page is None or page <= 0:
+    if page is None or page <= 1:
         connect_page_list = process_page_from_request(request)
     else:
         pageWeb = Page.objects.get_or_create(url_page=request.path)[0]
-        connect_page_list = Connect.objects.filter(page=pageWeb)
+        connect_page_list = get_conn_for_page(pageWeb)
 
     paginator = Paginator(connect_page_list, 10)
     try:
@@ -54,4 +64,4 @@ def pegination_connect_pages(request):
         connect_page = []
     except EmptyPage:
         connect_page = []
-    return connect_page
+    return fill_user_json_conn(connect_page)

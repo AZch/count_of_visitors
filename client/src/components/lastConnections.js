@@ -9,7 +9,7 @@ class LastConnections extends React.Component {
         super(props);
         this.state = {
             listConn: [],
-            page: 0,
+            page: 1,
             status: "",
             currentConn: {},
             url: props.url
@@ -26,6 +26,7 @@ class LastConnections extends React.Component {
             .then((result) => {
                 if (result.error === undefined) {
                     let newConn = listConn.concat(result.old_connections);
+                    console.log(result);
                     this.setState({
                         page: newPage,
                         listConn: newConn,
@@ -52,6 +53,7 @@ class LastConnections extends React.Component {
     }
 
     componentDidMount() {
+        console.log('me');
         this.getPage(true);
     }
 

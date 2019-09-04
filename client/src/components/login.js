@@ -38,7 +38,7 @@ class LoginInput extends React.Component {
                 })
                 .catch((error) => {
                     this.setState({
-                        status: 'cant perform action'
+                        status: 'provide data field'
                     });
                     console.log(error);
                 });

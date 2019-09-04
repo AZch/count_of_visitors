@@ -1,6 +1,7 @@
 import LastConnections from "./lastConnections";
 const UserData = require('../questions/userData');
 const React = require('react');
+const Standart = require('../questions/standart');
 
 class Logout extends React.Component {
   constructor(props) {
